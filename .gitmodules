@@ -1,0 +1,3 @@
+[submodule "lib/rain.orderbook"]
+	path = lib/rain.orderbook
+	url = https://github.com/rainlanguage/rain.orderbook.git

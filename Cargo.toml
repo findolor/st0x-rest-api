@@ -1,0 +1,12 @@
+[package]
+name = "st0x_rest_api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rain_orderbook_common = { path = "lib/rain.orderbook/crates/common" }
+rain_orderbook_bindings = { path = "lib/rain.orderbook/crates/bindings" }
+rain_orderbook_quote = { path = "lib/rain.orderbook/crates/quote" }
+rain_orderbook_subgraph_client = { path = "lib/rain.orderbook/crates/subgraph" }
+rain_orderbook_app_settings = { path = "lib/rain.orderbook/crates/settings" }
+rain_orderbook_math = { path = "lib/rain.orderbook/crates/math" }
