@@ -1,4 +1,4 @@
-use alloy::primitives::{Address, FixedBytes};
+use alloy::primitives::{Address, Bytes, FixedBytes};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -24,8 +24,8 @@ pub struct Approval {
     pub amount: String,
     #[schema(example = "USDC")]
     pub symbol: String,
-    #[schema(example = "0xabcdef...")]
-    pub approval_data: String,
+    #[schema(value_type = String, example = "0xabcdef...")]
+    pub approval_data: Bytes,
 }
 
 pub struct ValidatedAddress(pub Address);

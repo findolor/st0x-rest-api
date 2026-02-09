@@ -1,4 +1,4 @@
-use alloy::primitives::Address;
+use alloy::primitives::{Address, Bytes, U256};
 use crate::types::common::Approval;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -47,10 +47,10 @@ pub struct SwapCalldataRequest {
 pub struct SwapCalldataResponse {
     #[schema(value_type = String, example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
     pub to: Address,
-    #[schema(example = "0xabcdef...")]
-    pub data: String,
-    #[schema(example = "0")]
-    pub value: String,
+    #[schema(value_type = String, example = "0xabcdef...")]
+    pub data: Bytes,
+    #[schema(value_type = String, example = "0x0")]
+    pub value: U256,
     #[schema(example = "500000000000000")]
     pub estimated_input: String,
     pub approvals: Vec<Approval>,
