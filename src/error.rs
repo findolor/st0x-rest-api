@@ -25,8 +25,6 @@ pub enum ApiError {
     BadRequest(String),
     #[error("Unauthorized: {0}")]
     Unauthorized(String),
-    #[error("Accepted: {0}")]
-    Accepted(String),
     #[error("Not found: {0}")]
     NotFound(String),
     #[error("Internal error: {0}")]
@@ -38,7 +36,6 @@ impl<'r> Responder<'r, 'static> for ApiError {
         let (status, code, message) = match &self {
             ApiError::BadRequest(msg) => (Status::BadRequest, "BAD_REQUEST", msg.clone()),
             ApiError::Unauthorized(msg) => (Status::Unauthorized, "UNAUTHORIZED", msg.clone()),
-            ApiError::Accepted(msg) => (Status::Accepted, "ACCEPTED", msg.clone()),
             ApiError::NotFound(msg) => (Status::NotFound, "NOT_FOUND", msg.clone()),
             ApiError::Internal(msg) => {
                 (Status::InternalServerError, "INTERNAL_ERROR", msg.clone())
@@ -69,10 +66,6 @@ mod tests {
     fn unauthorized() -> Result<(), ApiError> {
         Err(ApiError::Unauthorized("no token".into()))
     }
-    #[get("/accepted")]
-    fn accepted() -> Result<(), ApiError> {
-        Err(ApiError::Accepted("not yet indexed".into()))
-    }
     #[get("/not-found")]
     fn not_found() -> Result<(), ApiError> {
         Err(ApiError::NotFound("order not found".into()))
@@ -85,7 +78,7 @@ mod tests {
     fn error_client() -> Client {
         let rocket = rocket::build().mount(
             "/",
-            rocket::routes![bad_request, unauthorized, accepted, not_found, internal],
+            rocket::routes![bad_request, unauthorized, not_found, internal],
         );
         Client::tracked(rocket).expect("valid rocket instance")
     }
@@ -115,12 +108,6 @@ mod tests {
     fn test_unauthorized_returns_401() {
         let client = error_client();
         assert_error_response(&client, "/unauthorized", 401, "UNAUTHORIZED", "no token");
-    }
-
-    #[test]
-    fn test_accepted_returns_202() {
-        let client = error_client();
-        assert_error_response(&client, "/accepted", 202, "ACCEPTED", "not yet indexed");
     }
 
     #[test]

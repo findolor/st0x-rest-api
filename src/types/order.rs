@@ -1,4 +1,4 @@
-use alloy::primitives::{Address, FixedBytes};
+use alloy::primitives::{Address, Bytes, FixedBytes, U256};
 use crate::types::common::{Approval, TokenRef};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -28,8 +28,10 @@ pub struct DeployDcaOrderRequest {
     pub start_io: String,
     #[schema(example = "0.0003")]
     pub floor_io: String,
-    pub input_vault_id: Option<String>,
-    pub output_vault_id: Option<String>,
+    #[schema(value_type = Option<String>)]
+    pub input_vault_id: Option<U256>,
+    #[schema(value_type = Option<String>)]
+    pub output_vault_id: Option<U256>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -42,9 +44,11 @@ pub struct DeploySolverOrderRequest {
     #[schema(example = "1000000")]
     pub amount: String,
     #[schema(example = "0.0005")]
-    pub ioratio: String,
-    pub input_vault_id: Option<String>,
-    pub output_vault_id: Option<String>,
+    pub io_ratio: String,
+    #[schema(value_type = Option<String>)]
+    pub input_vault_id: Option<U256>,
+    #[schema(value_type = Option<String>)]
+    pub output_vault_id: Option<U256>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -52,10 +56,10 @@ pub struct DeploySolverOrderRequest {
 pub struct DeployOrderResponse {
     #[schema(value_type = String, example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
     pub to: Address,
-    #[schema(example = "0xabcdef...")]
-    pub data: String,
-    #[schema(example = "0")]
-    pub value: String,
+    #[schema(value_type = String, example = "0xabcdef...")]
+    pub data: Bytes,
+    #[schema(value_type = String, example = "0x0")]
+    pub value: U256,
     pub approvals: Vec<Approval>,
 }
 
@@ -71,10 +75,10 @@ pub struct CancelOrderRequest {
 pub struct CancelTransaction {
     #[schema(value_type = String, example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
     pub to: Address,
-    #[schema(example = "0xabcdef...")]
-    pub data: String,
-    #[schema(example = "0")]
-    pub value: String,
+    #[schema(value_type = String, example = "0xabcdef...")]
+    pub data: Bytes,
+    #[schema(value_type = String, example = "0x0")]
+    pub value: U256,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -147,10 +151,10 @@ pub struct OrderDetail {
     pub order_details: OrderDetailsInfo,
     pub input_token: TokenRef,
     pub output_token: TokenRef,
-    #[schema(example = "1")]
-    pub input_vault_id: String,
-    #[schema(example = "2")]
-    pub output_vault_id: String,
+    #[schema(value_type = String, example = "0x1")]
+    pub input_vault_id: U256,
+    #[schema(value_type = String, example = "0x2")]
+    pub output_vault_id: U256,
     #[schema(example = "1000000")]
     pub input_vault_balance: String,
     #[schema(example = "500000")]
