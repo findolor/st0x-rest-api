@@ -27,10 +27,6 @@ pub struct Approval {
     pub approval_data: String,
 }
 
-pub fn default_page_size() -> Option<u32> {
-    Some(20)
-}
-
 pub struct OrderHash(pub String);
 
 impl<'a> rocket::request::FromParam<'a> for OrderHash {

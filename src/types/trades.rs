@@ -8,11 +8,9 @@ use utoipa::{IntoParams, ToSchema};
 #[serde(rename_all = "camelCase")]
 pub struct TradesPaginationParams {
     #[field(name = "page")]
-    #[serde(default)]
     #[param(example = 1)]
     pub page: Option<u32>,
     #[field(name = "pageSize")]
-    #[serde(default = "crate::types::common::default_page_size")]
     #[param(example = 20)]
     pub page_size: Option<u32>,
     #[field(name = "startTime")]
@@ -132,7 +130,7 @@ mod tests {
     fn test_trades_pagination_defaults() {
         let json = r#"{}"#;
         let params: TradesPaginationParams = serde_json::from_str(json).unwrap();
-        assert_eq!(params.page_size, Some(20));
+        assert!(params.page_size.is_none());
         assert!(params.page.is_none());
         assert!(params.start_time.is_none());
         assert!(params.end_time.is_none());
