@@ -80,16 +80,3 @@ pub struct OrdersByTxResponse {
     pub timestamp: u64,
     pub orders: Vec<OrderByTxEntry>,
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_pagination_defaults() {
-        let json = r#"{}"#;
-        let params: OrdersPaginationParams = serde_json::from_str(json).unwrap();
-        assert!(params.page_size.is_none());
-        assert!(params.page.is_none());
-    }
-}

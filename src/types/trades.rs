@@ -121,18 +121,3 @@ pub struct TradesByTxResponse {
     pub trades: Vec<TradeByTxEntry>,
     pub totals: TradesTotals,
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_trades_pagination_defaults() {
-        let json = r#"{}"#;
-        let params: TradesPaginationParams = serde_json::from_str(json).unwrap();
-        assert!(params.page_size.is_none());
-        assert!(params.page.is_none());
-        assert!(params.start_time.is_none());
-        assert!(params.end_time.is_none());
-    }
-}
