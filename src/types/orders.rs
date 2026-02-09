@@ -1,3 +1,4 @@
+use alloy::primitives::{Address, FixedBytes};
 use crate::types::common::TokenRef;
 use rocket::form::FromForm;
 use serde::{Deserialize, Serialize};
@@ -18,10 +19,10 @@ pub struct OrdersPaginationParams {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderSummary {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub order_hash: String,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub owner: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub order_hash: FixedBytes<32>,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub owner: Address,
     pub input_token: TokenRef,
     pub output_token: TokenRef,
     #[schema(example = "500000")]
@@ -30,8 +31,8 @@ pub struct OrderSummary {
     pub io_ratio: String,
     #[schema(example = 1718452800)]
     pub created_at: u64,
-    #[schema(example = "0xorderbook")]
-    pub orderbook_id: String,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub orderbook_id: Address,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -59,12 +60,12 @@ pub struct OrdersListResponse {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderByTxEntry {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub order_hash: String,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub owner: String,
-    #[schema(example = "0xorderbook")]
-    pub orderbook_id: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub order_hash: FixedBytes<32>,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub owner: Address,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub orderbook_id: Address,
     pub input_token: TokenRef,
     pub output_token: TokenRef,
 }
@@ -72,8 +73,8 @@ pub struct OrderByTxEntry {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct OrdersByTxResponse {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub tx_hash: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub tx_hash: FixedBytes<32>,
     #[schema(example = 12345678)]
     pub block_number: u64,
     #[schema(example = 1718452800)]

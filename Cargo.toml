@@ -12,3 +12,4 @@ thiserror = "2"
 utoipa = { version = "5", features = ["rocket_extras"] }
 utoipa-swagger-ui = { version = "9", features = ["rocket"] }
 tokio = { version = "1", features = ["full"] }
+alloy = { version = "1.0.9", default-features = false, features = ["std", "serde"] }

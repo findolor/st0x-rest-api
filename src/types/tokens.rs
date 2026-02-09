@@ -1,11 +1,12 @@
+use alloy::primitives::Address;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenInfo {
-    #[schema(example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
-    pub address: String,
+    #[schema(value_type = String, example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
+    pub address: Address,
     #[schema(example = "USDC")]
     pub symbol: String,
     #[schema(example = "USD Coin")]
@@ -30,7 +31,9 @@ mod tests {
     #[test]
     fn test_token_info_serializes_isin_uppercase() {
         let token = TokenInfo {
-            address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".into(),
+            address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+                .parse()
+                .unwrap(),
             symbol: "USDC".into(),
             name: "USD Coin".into(),
             isin: "US1234567890".into(),

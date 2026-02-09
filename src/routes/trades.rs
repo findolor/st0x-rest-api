@@ -1,4 +1,5 @@
 use crate::error::{ApiError, ApiErrorResponse};
+use crate::types::common::{ValidatedAddress, ValidatedFixedBytes};
 use crate::types::trades::{TradesByAddressResponse, TradesByTxResponse, TradesPaginationParams};
 use rocket::serde::json::Json;
 use rocket::Route;
@@ -18,7 +19,7 @@ use rocket::Route;
     )
 )]
 #[get("/tx/<tx_hash>")]
-pub async fn get_trades_by_tx(tx_hash: String) -> Result<Json<TradesByTxResponse>, ApiError> {
+pub async fn get_trades_by_tx(tx_hash: ValidatedFixedBytes) -> Result<Json<TradesByTxResponse>, ApiError> {
     let _ = tx_hash;
     todo!()
 }
@@ -39,7 +40,7 @@ pub async fn get_trades_by_tx(tx_hash: String) -> Result<Json<TradesByTxResponse
 )]
 #[get("/<address>?<params..>", rank = 2)]
 pub async fn get_trades_by_address(
-    address: String,
+    address: ValidatedAddress,
     params: TradesPaginationParams,
 ) -> Result<Json<TradesByAddressResponse>, ApiError> {
     let _ = (address, params);

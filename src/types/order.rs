@@ -1,3 +1,4 @@
+use alloy::primitives::{Address, FixedBytes};
 use crate::types::common::{Approval, TokenRef};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -13,10 +14,10 @@ pub enum PeriodUnit {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeployDcaOrderRequest {
-    #[schema(example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
-    pub input_token: String,
-    #[schema(example = "0x4200000000000000000000000000000000000006")]
-    pub output_token: String,
+    #[schema(value_type = String, example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
+    pub input_token: Address,
+    #[schema(value_type = String, example = "0x4200000000000000000000000000000000000006")]
+    pub output_token: Address,
     #[schema(example = "1000000")]
     pub budget_amount: String,
     #[schema(example = 4)]
@@ -34,10 +35,10 @@ pub struct DeployDcaOrderRequest {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeploySolverOrderRequest {
-    #[schema(example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
-    pub input_token: String,
-    #[schema(example = "0x4200000000000000000000000000000000000006")]
-    pub output_token: String,
+    #[schema(value_type = String, example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
+    pub input_token: Address,
+    #[schema(value_type = String, example = "0x4200000000000000000000000000000000000006")]
+    pub output_token: Address,
     #[schema(example = "1000000")]
     pub amount: String,
     #[schema(example = "0.0005")]
@@ -49,8 +50,8 @@ pub struct DeploySolverOrderRequest {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeployOrderResponse {
-    #[schema(example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
-    pub to: String,
+    #[schema(value_type = String, example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
+    pub to: Address,
     #[schema(example = "0xabcdef...")]
     pub data: String,
     #[schema(example = "0")]
@@ -61,15 +62,15 @@ pub struct DeployOrderResponse {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CancelOrderRequest {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub order_hash: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub order_hash: FixedBytes<32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CancelTransaction {
-    #[schema(example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
-    pub to: String,
+    #[schema(value_type = String, example = "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57")]
+    pub to: Address,
     #[schema(example = "0xabcdef...")]
     pub data: String,
     #[schema(example = "0")]
@@ -79,8 +80,8 @@ pub struct CancelTransaction {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenReturn {
-    #[schema(example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
-    pub token: String,
+    #[schema(value_type = String, example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
+    pub token: Address,
     #[schema(example = "USDC")]
     pub symbol: String,
     #[schema(example = "1000000")]
@@ -124,25 +125,25 @@ pub struct OrderDetailsInfo {
 pub struct OrderTradeEntry {
     #[schema(example = "trade-1")]
     pub id: String,
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub tx_hash: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub tx_hash: FixedBytes<32>,
     #[schema(example = "1000000")]
     pub input_amount: String,
     #[schema(example = "500000")]
     pub output_amount: String,
     #[schema(example = 1718452800)]
     pub timestamp: u64,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub sender: String,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub sender: Address,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderDetail {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub order_hash: String,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub owner: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub order_hash: FixedBytes<32>,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub owner: Address,
     pub order_details: OrderDetailsInfo,
     pub input_token: TokenRef,
     pub output_token: TokenRef,
@@ -158,8 +159,8 @@ pub struct OrderDetail {
     pub io_ratio: String,
     #[schema(example = 1718452800)]
     pub created_at: u64,
-    #[schema(example = "0xorderbook")]
-    pub orderbook_id: String,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub orderbook_id: Address,
     pub trades: Vec<OrderTradeEntry>,
 }
 

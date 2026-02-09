@@ -1,5 +1,5 @@
 use crate::error::{ApiError, ApiErrorResponse};
-use crate::types::common::OrderHash;
+use crate::types::common::ValidatedFixedBytes;
 use crate::types::order::{
     CancelOrderRequest, CancelOrderResponse, DeployDcaOrderRequest, DeployOrderResponse,
     DeploySolverOrderRequest, OrderDetail,
@@ -59,7 +59,7 @@ pub async fn post_order_solver(
     )
 )]
 #[get("/<order_hash>")]
-pub async fn get_order(order_hash: OrderHash) -> Result<Json<OrderDetail>, ApiError> {
+pub async fn get_order(order_hash: ValidatedFixedBytes) -> Result<Json<OrderDetail>, ApiError> {
     let _ = order_hash;
     todo!()
 }

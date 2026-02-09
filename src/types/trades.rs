@@ -1,3 +1,4 @@
+use alloy::primitives::{Address, FixedBytes};
 use crate::types::common::TokenRef;
 use rocket::form::FromForm;
 use serde::{Deserialize, Serialize};
@@ -24,15 +25,16 @@ pub struct TradesPaginationParams {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeByAddress {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub tx_hash: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub tx_hash: FixedBytes<32>,
     #[schema(example = "1000000")]
     pub input_amount: String,
     #[schema(example = "500000")]
     pub output_amount: String,
     pub input_token: TokenRef,
     pub output_token: TokenRef,
-    pub order_hash: Option<String>,
+    #[schema(value_type = Option<String>)]
+    pub order_hash: Option<FixedBytes<32>>,
     #[schema(example = 1718452800)]
     pub timestamp: u64,
     #[schema(example = 12345678)]
@@ -64,10 +66,10 @@ pub struct TradesByAddressResponse {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeRequest {
-    #[schema(example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
-    pub input_token: String,
-    #[schema(example = "0x4200000000000000000000000000000000000006")]
-    pub output_token: String,
+    #[schema(value_type = String, example = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")]
+    pub input_token: Address,
+    #[schema(value_type = String, example = "0x4200000000000000000000000000000000000006")]
+    pub output_token: Address,
     #[schema(example = "1000000")]
     pub maximum_input: String,
     #[schema(example = "0.0006")]
@@ -88,10 +90,10 @@ pub struct TradeResult {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeByTxEntry {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub order_hash: String,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub order_owner: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub order_hash: FixedBytes<32>,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub order_owner: Address,
     pub request: TradeRequest,
     pub result: TradeResult,
 }
@@ -110,14 +112,14 @@ pub struct TradesTotals {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TradesByTxResponse {
-    #[schema(example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
-    pub tx_hash: String,
+    #[schema(value_type = String, example = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab")]
+    pub tx_hash: FixedBytes<32>,
     #[schema(example = 12345678)]
     pub block_number: u64,
     #[schema(example = 1718452800)]
     pub timestamp: u64,
-    #[schema(example = "0x1234567890abcdef1234567890abcdef12345678")]
-    pub sender: String,
+    #[schema(value_type = String, example = "0x1234567890abcdef1234567890abcdef12345678")]
+    pub sender: Address,
     pub trades: Vec<TradeByTxEntry>,
     pub totals: TradesTotals,
 }

@@ -25,6 +25,8 @@ pub enum ApiError {
     BadRequest(String),
     #[error("Unauthorized: {0}")]
     Unauthorized(String),
+    #[error("Accepted: {0}")]
+    Accepted(String),
     #[error("Not found: {0}")]
     NotFound(String),
     #[error("Internal error: {0}")]
@@ -36,6 +38,7 @@ impl<'r> Responder<'r, 'static> for ApiError {
         let (status, code, message) = match &self {
             ApiError::BadRequest(msg) => (Status::BadRequest, "BAD_REQUEST", msg.clone()),
             ApiError::Unauthorized(msg) => (Status::Unauthorized, "UNAUTHORIZED", msg.clone()),
+            ApiError::Accepted(msg) => (Status::Accepted, "ACCEPTED", msg.clone()),
             ApiError::NotFound(msg) => (Status::NotFound, "NOT_FOUND", msg.clone()),
             ApiError::Internal(msg) => {
                 (Status::InternalServerError, "INTERNAL_ERROR", msg.clone())
@@ -50,5 +53,85 @@ impl<'r> Responder<'r, 'static> for ApiError {
         Response::build_from(Json(body).respond_to(req)?)
             .status(status)
             .ok()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rocket::local::blocking::Client;
+
+    #[get("/bad-request")]
+    fn bad_request() -> Result<(), ApiError> {
+        Err(ApiError::BadRequest("invalid input".into()))
+    }
+    #[get("/unauthorized")]
+    fn unauthorized() -> Result<(), ApiError> {
+        Err(ApiError::Unauthorized("no token".into()))
+    }
+    #[get("/accepted")]
+    fn accepted() -> Result<(), ApiError> {
+        Err(ApiError::Accepted("not yet indexed".into()))
+    }
+    #[get("/not-found")]
+    fn not_found() -> Result<(), ApiError> {
+        Err(ApiError::NotFound("order not found".into()))
+    }
+    #[get("/internal")]
+    fn internal() -> Result<(), ApiError> {
+        Err(ApiError::Internal("something broke".into()))
+    }
+
+    fn error_client() -> Client {
+        let rocket = rocket::build().mount(
+            "/",
+            rocket::routes![bad_request, unauthorized, accepted, not_found, internal],
+        );
+        Client::tracked(rocket).expect("valid rocket instance")
+    }
+
+    fn assert_error_response(
+        client: &Client,
+        path: &str,
+        expected_status: u16,
+        expected_code: &str,
+        expected_message: &str,
+    ) {
+        let response = client.get(path).dispatch();
+        assert_eq!(response.status().code, expected_status);
+        let body: serde_json::Value =
+            serde_json::from_str(&response.into_string().unwrap()).unwrap();
+        assert_eq!(body["error"]["code"], expected_code);
+        assert_eq!(body["error"]["message"], expected_message);
+    }
+
+    #[test]
+    fn test_bad_request_returns_400() {
+        let client = error_client();
+        assert_error_response(&client, "/bad-request", 400, "BAD_REQUEST", "invalid input");
+    }
+
+    #[test]
+    fn test_unauthorized_returns_401() {
+        let client = error_client();
+        assert_error_response(&client, "/unauthorized", 401, "UNAUTHORIZED", "no token");
+    }
+
+    #[test]
+    fn test_accepted_returns_202() {
+        let client = error_client();
+        assert_error_response(&client, "/accepted", 202, "ACCEPTED", "not yet indexed");
+    }
+
+    #[test]
+    fn test_not_found_returns_404() {
+        let client = error_client();
+        assert_error_response(&client, "/not-found", 404, "NOT_FOUND", "order not found");
+    }
+
+    #[test]
+    fn test_internal_returns_500() {
+        let client = error_client();
+        assert_error_response(&client, "/internal", 500, "INTERNAL_ERROR", "something broke");
     }
 }
