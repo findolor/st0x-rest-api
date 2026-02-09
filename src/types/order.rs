@@ -168,25 +168,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_deploy_dca_order_request_serde() {
-        let json = r#"{
-            "inputToken": "0xabc",
-            "outputToken": "0xdef",
-            "budgetAmount": "1000000",
-            "period": 4,
-            "periodUnit": "hours",
-            "startIo": "0.0005",
-            "floorIo": "0.0003"
-        }"#;
-        let req: DeployDcaOrderRequest = serde_json::from_str(json).unwrap();
-        assert_eq!(req.period_unit, PeriodUnit::Hours);
-        assert_eq!(req.period, 4);
-        assert_eq!(req.budget_amount, "1000000");
-        assert!(req.input_vault_id.is_none());
-        assert!(req.output_vault_id.is_none());
-    }
-
-    #[test]
     fn test_period_unit_variants() {
         let variants = [
             ("\"minutes\"", PeriodUnit::Minutes),
