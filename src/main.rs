@@ -1,11 +1,15 @@
 #[macro_use]
 extern crate rocket;
 
+mod catchers;
 mod error;
+mod fairings;
 mod routes;
+mod telemetry;
 mod types;
 
 use rocket_cors::{AllowedHeaders, AllowedMethods, AllowedOrigins, CorsOptions};
+use std::collections::HashSet;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -53,6 +57,7 @@ fn configure_cors() -> CorsOptions {
         allowed_methods,
         allowed_headers: AllowedHeaders::all(),
         allow_credentials: false,
+        expose_headers: HashSet::from(["X-Request-Id".to_string()]),
         ..Default::default()
     }
 }
@@ -62,7 +67,12 @@ fn rocket() -> rocket::Rocket<rocket::Build> {
         .to_cors()
         .expect("CORS configuration failed");
 
-    rocket::build()
+    let config = rocket::Config {
+        log_level: rocket::config::LogLevel::Normal,
+        ..rocket::Config::default()
+    };
+
+    rocket::custom(config)
         .mount("/", routes::health::routes())
         .mount("/v1/tokens", routes::tokens::routes())
         .mount("/v1/swap", routes::swap::routes())
@@ -73,11 +83,14 @@ fn rocket() -> rocket::Rocket<rocket::Build> {
             "/",
             SwaggerUi::new("/swagger/<tail..>").url("/api-doc/openapi.json", ApiDoc::openapi()),
         )
+        .register("/", catchers::catchers())
+        .attach(fairings::RequestLogger)
         .attach(cors)
 }
 
 #[launch]
 fn launch() -> _ {
+    telemetry::init();
     rocket()
 }
 
