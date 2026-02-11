@@ -5,11 +5,6 @@ static TELEMETRY_INIT: Once = Once::new();
 
 pub fn init() {
     TELEMETRY_INIT.call_once(|| {
-        if let Err(err) = tracing_log::LogTracer::init() {
-            eprintln!("failed to set log tracer: {err}");
-            std::process::exit(1);
-        }
-
         let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|e| {
             eprintln!("invalid RUST_LOG filter, using default: {e}");
             EnvFilter::new("st0x_rest_api=info,rocket=warn,warn")
