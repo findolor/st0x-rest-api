@@ -66,10 +66,23 @@ async fn rocket() -> rocket::Rocket<rocket::Build> {
         std::process::exit(1);
     });
 
-    let registry = DotrainRegistry::new(registry_url).await.unwrap_or_else(|e| {
-        eprintln!("Failed to load registry: {e}");
-        std::process::exit(1);
-    });
+    let registry = tokio::task::spawn_blocking(move || {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap_or_else(|_| std::process::exit(1));
+        let local = tokio::task::LocalSet::new();
+        rt.block_on(local.run_until(async {
+            DotrainRegistry::new(registry_url)
+                .await
+                .unwrap_or_else(|e| {
+                    eprintln!("Failed to load registry: {e}");
+                    std::process::exit(1);
+                })
+        }))
+    })
+    .await
+    .unwrap_or_else(|_| std::process::exit(1));
 
     let cors = configure_cors()
         .to_cors()

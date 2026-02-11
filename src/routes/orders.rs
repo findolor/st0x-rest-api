@@ -92,9 +92,7 @@ pub async fn get_orders_by_address(
             .map_err(|e| e.to_string())?;
         let local = tokio::task::LocalSet::new();
         rt.block_on(local.run_until(async {
-            let client = registry
-                .get_raindex_client()
-                .map_err(|e| e.to_string())?;
+            let client = registry.get_raindex_client().map_err(|e| e.to_string())?;
 
             let filters = GetOrdersFilters {
                 owners: vec![owner],
