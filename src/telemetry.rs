@@ -20,7 +20,12 @@ pub fn init() -> WorkerGuard {
         let init_result = tracing_subscriber::registry()
             .with(env_filter)
             .with(fmt::layer().json().with_current_span(false))
-            .with(fmt::layer().json().with_current_span(false).with_writer(file_writer))
+            .with(
+                fmt::layer()
+                    .json()
+                    .with_current_span(false)
+                    .with_writer(file_writer),
+            )
             .try_init();
 
         if let Err(err) = init_result {
