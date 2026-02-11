@@ -6,6 +6,11 @@
 - Run tests: `nix develop -c cargo test`
 - Run server: `nix develop -c cargo run`
 
+## Post-Implementation
+- After every implementation, run formatter and linter before committing:
+  - `nix develop -c cargo fmt`
+  - `nix develop -c rainix-rs-static`
+
 ## Code Rules
 - Never use `expect` or `unwrap` in production code; handle errors gracefully or exit with a message
 - Every route handler must log appropriately using tracing (request received, errors, key decisions)
