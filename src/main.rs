@@ -63,9 +63,13 @@ fn configure_cors() -> CorsOptions {
 }
 
 fn rocket() -> rocket::Rocket<rocket::Build> {
-    let cors = configure_cors()
-        .to_cors()
-        .expect("CORS configuration failed");
+    let cors = match configure_cors().to_cors() {
+        Ok(cors) => cors,
+        Err(e) => {
+            tracing::error!(error = %e, "CORS configuration failed");
+            std::process::exit(1);
+        }
+    };
 
     let config = rocket::Config {
         log_level: rocket::config::LogLevel::Normal,
