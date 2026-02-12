@@ -10,3 +10,10 @@ CREATE TABLE IF NOT EXISTS api_keys (
 );
 
 CREATE INDEX idx_api_keys_key_id ON api_keys (key_id);
+
+CREATE TRIGGER update_api_keys_updated_at
+AFTER UPDATE ON api_keys
+FOR EACH ROW
+BEGIN
+    UPDATE api_keys SET updated_at = datetime('now') WHERE id = NEW.id;
+END;
