@@ -54,14 +54,15 @@ impl<'r> FromRequest<'r> for AuthenticatedKey {
             }
         };
 
-        let encoded = match header.strip_prefix("Basic ") {
-            Some(e) => e,
-            None => {
-                return Outcome::Error((
-                    Status::Unauthorized,
-                    ApiError::Unauthorized("invalid Authorization scheme".into()),
-                ));
-            }
+        let encoded = if header.len() > 6
+            && header[..6].eq_ignore_ascii_case("Basic ")
+        {
+            &header[6..]
+        } else {
+            return Outcome::Error((
+                Status::Unauthorized,
+                ApiError::Unauthorized("invalid Authorization scheme".into()),
+            ));
         };
 
         let decoded = match base64::engine::general_purpose::STANDARD.decode(encoded) {
