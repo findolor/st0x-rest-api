@@ -54,9 +54,7 @@ impl<'r> FromRequest<'r> for AuthenticatedKey {
             }
         };
 
-        let encoded = if header.len() > 6
-            && header[..6].eq_ignore_ascii_case("Basic ")
-        {
+        let encoded = if header.len() > 6 && header[..6].eq_ignore_ascii_case("Basic ") {
             &header[6..]
         } else {
             return Outcome::Error((
