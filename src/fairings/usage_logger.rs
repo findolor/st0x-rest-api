@@ -76,10 +76,7 @@ mod tests {
 
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 
-        let pool = client
-            .rocket()
-            .state::<crate::db::DbPool>()
-            .expect("pool");
+        let pool = client.rocket().state::<crate::db::DbPool>().expect("pool");
         let row: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM usage_logs")
             .fetch_one(pool)
             .await
@@ -112,10 +109,7 @@ mod tests {
 
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 
-        let pool = client
-            .rocket()
-            .state::<crate::db::DbPool>()
-            .expect("pool");
+        let pool = client.rocket().state::<crate::db::DbPool>().expect("pool");
         let row: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM usage_logs")
             .fetch_one(pool)
             .await
@@ -138,10 +132,7 @@ mod tests {
 
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 
-        let pool = client
-            .rocket()
-            .state::<crate::db::DbPool>()
-            .expect("pool");
+        let pool = client.rocket().state::<crate::db::DbPool>().expect("pool");
         let row: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM usage_logs")
             .fetch_one(pool)
             .await
