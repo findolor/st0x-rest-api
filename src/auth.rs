@@ -20,6 +20,8 @@ pub struct ApiKeyRow {
     pub updated_at: String,
 }
 
+pub struct AuthKeyId(pub Option<i64>);
+
 #[derive(Debug)]
 pub struct AuthenticatedKey {
     pub id: i64,
@@ -145,6 +147,8 @@ impl<'r> FromRequest<'r> for AuthenticatedKey {
         }
 
         tracing::info!(key_id = %row.key_id, label = %row.label, "authenticated");
+
+        req.local_cache(|| AuthKeyId(Some(row.id)));
 
         Outcome::Success(AuthenticatedKey {
             id: row.id,
