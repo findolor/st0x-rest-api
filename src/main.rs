@@ -173,16 +173,14 @@ mod tests {
             .rocket()
             .state::<db::DbPool>()
             .expect("pool in state");
-        sqlx::query(
-            "INSERT INTO api_keys (key_id, secret_hash, label, owner) VALUES (?, ?, ?, ?)",
-        )
-        .bind(&key_id)
-        .bind(&hash)
-        .bind("test-key")
-        .bind("test-owner")
-        .execute(pool)
-        .await
-        .expect("insert api key");
+        sqlx::query("INSERT INTO api_keys (key_id, secret_hash, label, owner) VALUES (?, ?, ?, ?)")
+            .bind(&key_id)
+            .bind(&hash)
+            .bind("test-key")
+            .bind("test-owner")
+            .execute(pool)
+            .await
+            .expect("insert api key");
 
         (key_id, secret)
     }
