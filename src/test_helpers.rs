@@ -2,14 +2,21 @@ use base64::Engine;
 use rocket::local::asynchronous::Client;
 
 pub(crate) async fn client() -> Client {
+    client_with_token_url(&crate::routes::tokens::TokenListUrl::default().0).await
+}
+
+pub(crate) async fn client_with_token_url(url: &str) -> Client {
     let id = uuid::Uuid::new_v4();
     let pool = crate::db::init(&format!("sqlite:file:{id}?mode=memory&cache=shared"))
         .await
         .expect("database init");
     let rate_limiter = crate::fairings::RateLimiter::new(10000, 10000);
-    Client::tracked(crate::rocket(pool, rate_limiter).expect("valid rocket instance"))
-        .await
-        .expect("valid client")
+    let token_list_url = crate::routes::tokens::TokenListUrl(url.to_string());
+    Client::tracked(
+        crate::rocket(pool, rate_limiter, token_list_url).expect("valid rocket instance"),
+    )
+    .await
+    .expect("valid client")
 }
 
 pub(crate) async fn seed_api_key(client: &Client) -> (String, String) {
