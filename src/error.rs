@@ -75,7 +75,9 @@ impl<'r> Responder<'r, 'static> for ApiError {
                 return Err(s);
             }
         };
-        let mut response = Response::build_from(json_response).status(status).finalize();
+        let mut response = Response::build_from(json_response)
+            .status(status)
+            .finalize();
         if matches!(self, ApiError::RateLimited(_)) {
             response.set_header(Header::new("Retry-After", "60"));
         }

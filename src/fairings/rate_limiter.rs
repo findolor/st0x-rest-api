@@ -502,11 +502,11 @@ mod tests {
         let client = client().await;
         let (key_id, secret) = seed_api_key(&client).await;
 
-        let pool = client
+        let pool = client.rocket().state::<crate::db::DbPool>().expect("pool");
+        let rl = client
             .rocket()
-            .state::<crate::db::DbPool>()
-            .expect("pool");
-        let rl = client.rocket().state::<RateLimiter>().expect("rate limiter");
+            .state::<RateLimiter>()
+            .expect("rate limiter");
 
         let header_val = basic_auth_header(&key_id, &secret);
 
@@ -566,11 +566,11 @@ mod tests {
         let (key_id_a, secret_a) = seed_api_key(&client).await;
         let (key_id_b, secret_b) = seed_api_key(&client).await;
 
-        let pool = client
+        let pool = client.rocket().state::<crate::db::DbPool>().expect("pool");
+        let rl = client
             .rocket()
-            .state::<crate::db::DbPool>()
-            .expect("pool");
-        let rl = client.rocket().state::<RateLimiter>().expect("rate limiter");
+            .state::<RateLimiter>()
+            .expect("rate limiter");
 
         let api_key_a: (i64,) = sqlx::query_as("SELECT id FROM api_keys WHERE key_id = ?")
             .bind(&key_id_a)

@@ -14,9 +14,7 @@ use tracing::Instrument;
     )
 )]
 #[get("/health")]
-pub async fn get_health(
-    span: TracingSpan,
-) -> Result<Json<HealthResponse>, ApiError> {
+pub async fn get_health(span: TracingSpan) -> Result<Json<HealthResponse>, ApiError> {
     async move {
         tracing::info!("request received");
         Ok(Json(HealthResponse {
