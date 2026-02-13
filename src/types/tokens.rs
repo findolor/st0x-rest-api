@@ -24,6 +24,22 @@ pub struct TokenListResponse {
     pub tokens: Vec<TokenInfo>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct RemoteTokenList {
+    pub tokens: Vec<RemoteToken>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct RemoteToken {
+    pub chain_id: u32,
+    pub address: Address,
+    pub name: String,
+    pub symbol: String,
+    pub decimals: u8,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -43,4 +59,5 @@ mod tests {
         assert!(json.contains("\"ISIN\""));
         assert!(!json.contains("\"isin\""));
     }
+
 }
